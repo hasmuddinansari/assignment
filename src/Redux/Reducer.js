@@ -12,25 +12,31 @@ export const Reducer = (state = initialState, action) => {
         case "FETCH_CANDIDATES":
             return {
                 ...state,
-                candidates: action.payload,
+                candidates: action.data,
                 loading: false,
+                error: false,
+                message: "",
             }
         case "FETCH_QUESTIONS":
             return {
                 ...state,
-                questions: action.payload,
+                questions: action.data,
                 loading: false,
+                error: false,
+                message: "",
             }
         case "FETCH_APPLICATIONS":
             return {
                 ...state,
                 applications: action.data,
                 loading: false,
+                error: false,
+                message: "",
             }
         case "FETCH_FAILURE":
             return {
                 ...state,
-                message: "something went wrong",
+                message: action.msg,
                 loading: false,
                 error: true,
             }
@@ -39,5 +45,11 @@ export const Reducer = (state = initialState, action) => {
                 ...state,
                 loading: true,
             }
+        case "COMMENT":
+            return {
+                ...state,
+                message: action.msg
+            }
+        default: return state
     }
 }

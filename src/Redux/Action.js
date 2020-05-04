@@ -6,16 +6,24 @@ export const fetchRequest = () => {
     }
 }
 
-export const fetchFailure = () => {
+export const fetchFailure = (msg) => {
     return {
         type: "FETCH_FAILURE",
+        msg: msg
     }
 }
 
 export const fetchSuccess = (data, type) => {
     return {
-        type,
-        data
+        type: type,
+        data: data
+    }
+}
+
+export const comment = (msg) => {
+    return {
+        type: 'COMMENT',
+        msg
     }
 }
 
@@ -28,9 +36,18 @@ export const fetchResponse = (type, url) => {
                 dispatch(fetchSuccess(res.data, type))
             })
             .catch((err) => {
-                dispatch(fetchFailure())
+                dispatch(fetchFailure(err))
             })
     }
 }
 
+
+export const postComments = (comments) => {
+    return dispatch => {
+        return axios.post(comments)
+            .then(res => {
+                dispatch(comment("Comment is added"))
+            })
+    }
+}
 
