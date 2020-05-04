@@ -13,7 +13,7 @@
 
 2. run ```npm i``` to your command.
 3. Start your application by ```npm start```
-4. start json file server by go to src/server folder and run ```json-server --watch db.json --port 3004``` to your local machine.
+4. start json file server by go to src/server folder and run ```json-server --watch api.json --port 3004``` to your local machine.
 5. Happily use this APP !!!
 
 
