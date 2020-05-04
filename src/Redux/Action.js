@@ -20,10 +20,10 @@ export const fetchSuccess = (data, type) => {
     }
 }
 
-export const comment = (msg) => {
+export const CommentMsg = (msg) => {
     return {
         type: 'COMMENT',
-        msg
+        msg: msg
     }
 }
 
@@ -42,11 +42,29 @@ export const fetchResponse = (type, url) => {
 }
 
 
-export const postComments = (comments) => {
+export const postComments = (objectWithComment, qId, aId, comment) => {
     return dispatch => {
-        return axios.post(comments)
-            .then(res => {
-                dispatch(comment("Comment is added"))
+        let modifiedIndex
+        objectWithComment.videos.forEach((e, i) => {
+            if (e.questionId == qId) {
+                modifiedIndex = i
+            }
+        })
+        objectWithComment.videos[modifiedIndex] = {
+            ...objectWithComment.videos[modifiedIndex],
+            "comments": comment
+        }
+        // Content-Type: application/json
+        console.log(objectWithComment)
+        return axios({
+            method: "PATCH",
+            baseURL: "http://localhost:3004",
+            url: `/applications/${aId}`,
+            headers: { "Content-Type": "application/json" },
+            data: objectWithComment,
+        })
+            .then(() => {
+                alert("Comment is added in json file")
             })
     }
 }

@@ -37,6 +37,7 @@ export const Reducer = (state = initialState, action) => {
             return {
                 ...state,
                 message: action.msg,
+                applications: [],
                 loading: false,
                 error: true,
             }

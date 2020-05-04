@@ -1,21 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from "react-redux"
-import { fetchResponse } from "../Redux/Action"
+import { fetchResponse, postComments } from "../Redux/Action"
+import VideoQuestionCard from "./VideoQuestionCard"
 
-function Dashboard({ fetchResponse, candidates }) {
-    const [video, setVideo] = useState({})
+function Dashboard({ fetchResponse, candidates, applications, questions, error, message, postComments }) {
+
     useEffect(() => {
         fetchResponse("FETCH_CANDIDATES", "candidates")
+        fetchResponse("FETCH_QUESTIONS", `questions`)
     }, [])
 
-    // useEffect(() => {
-    //     // fetchResponse("FETCH_QUESTIONS", `applications/${e.target.value}`)
-    // }, [question])
+    function getQuestion(id) {
+        if (questions.length > 0) {
+            let curr_que = questions.find(e => {
+                return e.id == id
+            })
+            return curr_que.question
+        }
+        else {
+            return ""
+        }
+    }
 
     function handleChange(e) {
         fetchResponse("FETCH_APPLICATIONS", `applications/${e.target.value}`)
     }
-
 
 
     return (
@@ -38,6 +47,21 @@ function Dashboard({ fetchResponse, candidates }) {
                             </option>
                         })}
                     </select>
+
+                    {/* candidate not found */}
+                    {error && <h3 className="my-2 text-danger">Application not found !!</h3>}
+
+                    <div className="row justify-content-center">
+                        {applications
+                            && applications.videos
+                            && applications.videos.map(v => {
+                                return <VideoQuestionCard
+                                    key={v.questionId} video={v.src} qId={v.questionId} getQuestion={getQuestion}
+                                    postComments={postComments}
+                                    applications={applications}
+                                />
+                            })}
+                    </div>
                 </div>
             </div>
 
@@ -47,13 +71,18 @@ function Dashboard({ fetchResponse, candidates }) {
 
 const mapStateToProps = (state) => {
     return {
-        candidates: state.candidates
+        candidates: state.candidates,
+        applications: state.applications,
+        questions: state.questions,
+        message: state.message,
+        error: state.error
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchResponse: (type, url) => dispatch(fetchResponse(type, url))
+        fetchResponse: (type, url) => dispatch(fetchResponse(type, url)),
+        postComments: (objectWithComment, qId, aId, comment) => dispatch(postComments(objectWithComment, qId, aId, comment))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
